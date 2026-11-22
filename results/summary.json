@@ -1,0 +1,227 @@
+{
+ "note": "Lenient (math-only) metrics, 300 problems per split, single training seed (seed 0). 'default' is Run 3. pass@k from 8 samples at T=0.8.",
+ "models": {
+  "base": {
+   "test_id": [
+    0.86,
+    0.713,
+    0.973,
+    132
+   ],
+   "test_ood_length": [
+    0.687,
+    0.47,
+    0.873,
+    343
+   ],
+   "test_ood_digits": [
+    0.473,
+    0.357,
+    0.603,
+    139
+   ],
+   "five_op": 0.654,
+   "format_rate": 0.0
+  },
+  "default": {
+   "test_id": [
+    0.913,
+    0.902,
+    0.94,
+    128
+   ],
+   "test_ood_length": [
+    0.63,
+    0.606,
+    0.803,
+    220
+   ],
+   "test_ood_digits": [
+    0.48,
+    0.472,
+    0.547,
+    139
+   ],
+   "five_op": 0.59,
+   "format_rate": 1.0
+  },
+  "hard_train": {
+   "test_id": [
+    0.957,
+    0.928,
+    0.983,
+    248
+   ],
+   "test_ood_length": [
+    0.81,
+    0.772,
+    0.923,
+    393
+   ],
+   "test_ood_digits": [
+    0.553,
+    0.494,
+    0.707,
+    361
+   ],
+   "five_op": 0.75,
+   "format_rate": 0.98
+  },
+  "kl": {
+   "test_id": [
+    0.93,
+    0.911,
+    0.977,
+    120
+   ],
+   "test_ood_length": [
+    0.687,
+    0.628,
+    0.89,
+    253
+   ],
+   "test_ood_digits": [
+    0.53,
+    0.529,
+    0.643,
+    128
+   ],
+   "five_op": 0.654,
+   "format_rate": 0.0
+  },
+  "format_only": {
+   "test_id": [
+    0.08,
+    0.077,
+    0.15,
+    39
+   ],
+   "test_ood_length": [
+    0.007,
+    0.003,
+    0.01,
+    40
+   ],
+   "test_ood_digits": [
+    0.107,
+    0.085,
+    0.157,
+    43
+   ],
+   "five_op": 0.0,
+   "format_rate": 1.0
+  }
+ },
+ "columns": [
+  "greedy_acc",
+  "pass@1",
+  "pass@8",
+  "mean_chars"
+ ],
+ "paired_vs_base": {
+  "default": {
+   "test_id": {
+    "fixed": 25,
+    "broken": 9,
+    "p": 0.009,
+    "new": 1,
+    "lost": 11,
+    "p_cov": 0.006
+   },
+   "test_ood_length": {
+    "fixed": 31,
+    "broken": 48,
+    "p": 0.071,
+    "new": 9,
+    "lost": 30,
+    "p_cov": 0.001
+   },
+   "test_ood_digits": {
+    "fixed": 20,
+    "broken": 18,
+    "p": 0.87,
+    "new": 3,
+    "lost": 20,
+    "p_cov": 0.0005
+   }
+  },
+  "hard_train": {
+   "test_id": {
+    "fixed": 34,
+    "broken": 5,
+    "p": 2.4e-06,
+    "new": 5,
+    "lost": 2,
+    "p_cov": 0.45
+   },
+   "test_ood_length": {
+    "fixed": 54,
+    "broken": 17,
+    "p": 1.3e-05,
+    "new": 21,
+    "lost": 6,
+    "p_cov": 0.006
+   },
+   "test_ood_digits": {
+    "fixed": 39,
+    "broken": 15,
+    "p": 0.0015,
+    "new": 38,
+    "lost": 7,
+    "p_cov": 3.1e-06
+   }
+  },
+  "kl": {
+   "test_id": {
+    "fixed": 25,
+    "broken": 4,
+    "p": 0.0001,
+    "new": 3,
+    "lost": 2,
+    "p_cov": 1.0
+   },
+   "test_ood_length": {
+    "fixed": 24,
+    "broken": 24,
+    "p": 1.0,
+    "new": 15,
+    "lost": 10,
+    "p_cov": 0.42
+   },
+   "test_ood_digits": {
+    "fixed": 20,
+    "broken": 3,
+    "p": 0.0005,
+    "new": 19,
+    "lost": 7,
+    "p_cov": 0.029
+   }
+  },
+  "format_only": {
+   "test_id": {
+    "fixed": 4,
+    "broken": 238,
+    "p": 4e-65,
+    "new": 0,
+    "lost": 247,
+    "p_cov": 9e-75
+   },
+   "test_ood_length": {
+    "fixed": 0,
+    "broken": 204,
+    "p": 8e-62,
+    "new": 0,
+    "lost": 259,
+    "p_cov": 2e-78
+   },
+   "test_ood_digits": {
+    "fixed": 5,
+    "broken": 115,
+    "p": 3e-28,
+    "new": 0,
+    "lost": 134,
+    "p_cov": 9e-41
+   }
+  }
+ }
+}

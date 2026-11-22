@@ -1,0 +1,9 @@
+# Tested with trl 1.18, transformers 5.23, peft 0.21 on Kaggle (Python 3.13)
+torch
+trl>=0.19
+transformers
+peft
+accelerate
+datasets
+numpy
+matplotlib
