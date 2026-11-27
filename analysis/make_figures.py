@@ -68,3 +68,56 @@ handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(handles, labels, frameon=False, fontsize=9, loc="lower center", ncol=3)
 plt.tight_layout(rect=(0, 0.08, 1, 1)); plt.savefig(FIG / "training_dynamics.png", dpi=150); plt.close()
 print("figures written to", FIG)
+
+# Figure 4: seeds. One dot per training seed, bar = mean; dashed line = base model.
+if "seeds" in S:
+    R = S["seeds"]["runs"]
+    panels = [("test_id", "In-distribution"), ("test_ood_length", "OOD: longer expressions"),
+              ("test_ood_digits", "OOD: 3-digit numbers"), ("five_op", "OOD: 5-operand subset")]
+    groups = [("default", "default\n(2–3 operands)", COLORS["default"]),
+              ("hard_train", "hard_train\n(3–4 operands)", COLORS["hard_train"])]
+    base = {"test_id": .860, "test_ood_length": .687, "test_ood_digits": .473, "five_op": .654}
+    fig, axes = plt.subplots(1, 4, figsize=(13, 3.6), sharey=True)
+    for ax, (key, title) in zip(axes, panels):
+        for i, (g, lab, c) in enumerate(groups):
+            vals = [R[f"{g}_s{s}"][key] if key == "five_op" else R[f"{g}_s{s}"][key][0] for s in range(3)]
+            ax.bar(i, np.mean(vals), width=0.55, color=c, alpha=0.25, edgecolor="none")
+            ax.scatter([i - 0.1, i, i + 0.1], vals, color=c, s=46, zorder=3, edgecolor="white", linewidth=1.2)
+            ax.text(i, max(vals) + 0.035, f"{np.mean(vals):.2f} ± {np.std(vals, ddof=1):.2f}",
+                    ha="center", fontsize=8.5, color="#333")
+        ax.axhline(base[key], color="#888", ls="--", lw=1.2)
+        ax.text(-0.57, base[key] + 0.012, f"base {base[key]:.2f}", ha="left", fontsize=8, color="#666")
+        ax.set_xticks([0, 1]); ax.set_xticklabels([g[1] for g in groups], fontsize=8.5)
+        ax.set_title(title, loc="left", fontsize=10.5); ax.set_xlim(-0.6, 1.6); ax.set_ylim(0.3, 1.05)
+        ax.grid(axis="y", color="#e6e6e6", lw=.8); ax.set_axisbelow(True)
+    axes[0].set_ylabel("greedy accuracy (math only)")
+    fig.suptitle("Across 3 seeds, training on harder problems reliably helps on longer expressions; other differences are within seed noise",
+                 x=0.01, ha="left", fontsize=11.5)
+    plt.tight_layout(); plt.savefig(FIG / "seeds.png", dpi=150); plt.close()
+    print("seeds figure written")
+
+# Figure 5: reasoning length vs accuracy on longer expressions, one point per trained run.
+if "seeds" in S:
+    fig, ax = plt.subplots(figsize=(6.4, 4))
+    xs, ys = [], []
+    for name, r in S["seeds"]["runs"].items():
+        g = "hard_train" if name.startswith("hard") else "default"
+        x, y = r["test_ood_length"][3], r["test_ood_length"][0]
+        xs.append(x); ys.append(y)
+        learned = r["format_rate"] > 0.5
+        ax.scatter(x, y, s=80, color=COLORS[g] if learned else "white", edgecolor=COLORS[g], linewidth=2, zorder=3)
+        ax.annotate(f"s{name[-1]}", (x, y), xytext=(7, -3), textcoords="offset points", fontsize=8, color="#555")
+    ax.scatter(343, .687, s=80, color=COLORS["base"], zorder=3)
+    ax.annotate("base", (343, .687), xytext=(7, -3), textcoords="offset points", fontsize=8, color="#555")
+    r = np.corrcoef(xs, ys)[0, 1]
+    from matplotlib.lines import Line2D
+    h = [Line2D([], [], marker="o", ls="", color=COLORS["default"], ms=8, label="default"),
+         Line2D([], [], marker="o", ls="", color=COLORS["hard_train"], ms=8, label="hard_train"),
+         Line2D([], [], marker="o", ls="", color="white", mec="#555", mew=1.5, ms=8, label="hollow: format not learned")]
+    ax.legend(handles=h, frameon=False, fontsize=8.5, loc="lower right")
+    ax.set_xlabel("mean response length on longer expressions (characters)")
+    ax.set_ylabel("greedy accuracy, longer expressions")
+    ax.set_title(f"Longer reasoning, higher accuracy (6 trained runs, r = {r:.2f})", loc="left", fontsize=10.5)
+    ax.grid(color="#eee", lw=.8); ax.set_axisbelow(True)
+    plt.tight_layout(); plt.savefig(FIG / "length_vs_accuracy.png", dpi=150); plt.close()
+    print("length figure written")

@@ -47,11 +47,30 @@ Format compliance went from 0% to 100%.
 | `format_only` | Format reward only | Empty think blocks, accuracy 0.86 → 0.08 | Correctness drives the gains; a format reward alone is exploited |
 | `kl` | β = 0.04 | Diversity kept, no long-expression drop, smaller gains, format never learned | Anchoring prevents damage at the cost of gains (confounded by format) |
 
+## Seeds and pass@64: what replicated
+
+Two more training seeds each for `default` and `hard_train` (same data and test sets), plus pass@64 on 100 problems per OOD split for base vs `hard_train` seed 1.
+
+**Replicated.**
+- `hard_train` improves longer expressions in all 3 seeds: 0.81, 0.83, 0.78 vs base 0.69 (each p < 0.001), and the 5-operand subset 0.75, 0.81, 0.74 vs 0.65.
+- Across all 6 trained runs, reasoning length on longer expressions correlates with accuracy there (r = 0.92).
+
+**Did not replicate.**
+- Run 3's pass@8 drop on every split: seeds 1 and 2 of `default` held or raised pass@8.
+- `hard_train`'s gains on 3-digit numbers (0.55 in seed 0; 0.41 and 0.46 in seeds 1–2) and its in-distribution edge.
+- `default` on longer expressions is highly seed-dependent: 0.63, 0.80, 0.65.
+
+**Format learning is stochastic.** 3 of 6 runs learned `</think><answer>`. In the `default` runs, the two that learned it had the shortest reasoning and the lowest long-expression accuracy. That's suggestive, not established, at this sample size.
+
+**pass@64.** On longer expressions, base and `hard_train` solve nearly the same problems given 64 tries (0.96 vs 0.98; 4 vs 2 unique, p = 0.69), so the gain there is reliability (pass@1 0.46 → 0.82). On 3-digit numbers, `hard_train` solves 16 problems the base never does vs 5 the other way (p = 0.03): modest evidence of expanded coverage, from one seed.
+
+**Lesson.** Several conclusions from single runs were wrong or overstated. The robust result is narrower: harder training problems reliably improve generalization to longer problems, and that improvement mostly comes from reliability.
+
 ## Next
 
-- Two more seeds each for `default` and `hard_train` (mean ± std).
-- pass@64 for base vs `hard_train` on the OOD splits, to separate new ability from reliability.
 - A KL run that still learns the format, to remove the confound.
+- Control format learning directly (e.g. a larger format reward, or SFT on the format first) to test whether learning `</think><answer>` causes the reasoning compression.
+- More seeds for the 3-digit comparison and pass@64.
 
 ## Infrastructure notes
 
